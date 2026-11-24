@@ -131,6 +131,12 @@ function syncTime(value) {
   return d.toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
+function defaultSyncOwner() {
+  const host = location.hostname;
+  if (host.endsWith('.github.io')) return host.split('.')[0];
+  return '';
+}
+
 function openSyncSettings(onSaved) {
   const existing = loadSyncConfig();
   const m = openModal(
@@ -139,7 +145,7 @@ function openSyncSettings(onSaved) {
       <div class="dlg-body">用一个 GitHub 私有仓库保存 state.json。token 只保存在这台设备的浏览器里，不会写进导出备份。</div>
       <div class="sync-form">
         <label class="sync-field">GitHub 用户名
-          <input data-f="owner" value="${esc(existing ? existing.owner : '')}" placeholder="例如 octocat" autocomplete="username" spellcheck="false" />
+          <input data-f="owner" value="${esc(existing ? existing.owner : defaultSyncOwner())}" placeholder="例如 octocat" autocomplete="username" spellcheck="false" />
         </label>
         <label class="sync-field">私有仓库名
           <input data-f="repo" value="${esc(existing ? existing.repo : 'word-isle-progress')}" placeholder="word-isle-progress" autocomplete="off" spellcheck="false" />
