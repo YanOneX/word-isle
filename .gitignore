@@ -1,0 +1,17 @@
+# 开发期资料，不进入公开仓库
+docs/
+recon/
+tools/
+app-shots/
+sync/
+
+# 原始音效与贴纸素材，仅保留在本机
+app/assets/audio/
+app/assets/img/
+
+# 本地文件
+启动-手机访问.cmd
+*.log
+.DS_Store
+Thumbs.db
+node_modules/

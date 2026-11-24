@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" viewBox="0 0 400 280" role="img" aria-label="一本摊开的书和一杯热茶">
+  <rect x="8" y="8" width="384" height="264" rx="40" fill="#F7F2E8"/>
+  <path d="M28 214c54-16 98-8 132 12 34-20 78-28 132-12" fill="none" stroke="#DED4C4" stroke-width="3" stroke-linecap="round"/>
+  <g>
+    <path d="M98 182c0-8 6-14 14-14h54c8 0 14 6 14 14v34c-18-8-38-8-68-2-8 2-14-2-14-9z" fill="#E9DFCF" stroke="#2B2A28" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M302 182c0-8-6-14-14-14h-54c-8 0-14 6-14 14v34c18-8 38-8 68-2 8 2 14-2 14-9z" fill="#F3EADA" stroke="#2B2A28" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M220 168v50" stroke="#2B2A28" stroke-width="4" stroke-linecap="round"/>
+    <path d="M124 190c18-4 34-3 50 2M124 202c18-4 34-3 50 2M276 190c-18-4-34-3-50 2M276 202c-18-4-34-3-50 2" fill="none" stroke="#B9AC97" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g>
+    <path d="M284 126h44v30a22 22 0 0 1-22 22h0a22 22 0 0 1-22-22z" fill="#8FA68A" stroke="#2B2A28" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M328 134h10a12 12 0 0 1 0 24h-10" fill="none" stroke="#2B2A28" stroke-width="4" stroke-linecap="round"/>
+    <path d="M296 112c-5-7 5-10 0-17M312 112c-5-7 5-10 0-17" fill="none" stroke="#B9AC97" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g>
+    <path d="M92 126v42" stroke="#2B2A28" stroke-width="4" stroke-linecap="round"/>
+    <path d="M92 146c-16-2-24-12-24-26 14 0 24 8 24 26zM92 138c14-3 21-12 21-24-12 0-21 8-21 24z" fill="#C88364" stroke="#2B2A28" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M76 168h32l-4 22H80z" fill="#D6B45C" stroke="#2B2A28" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+  <path d="M154 104l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="#D6B45C"/>
+  <circle cx="252" cy="96" r="5" fill="#C88364"/>
+</svg>

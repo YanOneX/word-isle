@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" viewBox="0 0 400 280" role="img" aria-label="揉皱的纸团和一棵小芽">
+  <rect x="8" y="8" width="384" height="264" rx="40" fill="#F7F2E8"/>
+  <path d="M74 210c34-10 62-6 82 8M246 220c26-10 52-8 74 2" fill="none" stroke="#DED4C4" stroke-width="3" stroke-linecap="round"/>
+  <g>
+    <path d="M178 84l30 8 18 24-6 30-24 20-32-2-22-22-4-30 18-22z" fill="#F0E6D6" stroke="#2B2A28" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M186 98l10 18-8 14 16 8-4 18M220 96l-6 18 12 12-8 18M166 124l18-4 10 14-12 12" fill="none" stroke="#C9BBA6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M214 168c0-14 8-24 22-30" fill="none" stroke="#8FA68A" stroke-width="4" stroke-linecap="round"/>
+    <path d="M230 140c2-10 10-16 20-16-1 10-8 16-20 16z" fill="#8FA68A" stroke="#2B2A28" stroke-width="3.5" stroke-linejoin="round"/>
+  </g>
+  <g fill="none" stroke="#B9AC97" stroke-width="3.5" stroke-linecap="round">
+    <path d="M268 96a52 52 0 0 1 18 56" stroke-dasharray="3 9"/>
+    <path d="M278 142l8 12 10-10"/>
+  </g>
+  <path d="M108 96l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="#D6B45C"/>
+  <circle cx="294" cy="82" r="5" fill="#C88364"/>
+  <circle cx="128" cy="180" r="4" fill="#7C93A8"/>
+</svg>
