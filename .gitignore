@@ -4,6 +4,7 @@ recon/
 tools/
 app-shots/
 sync/
+deploy/
 
 # 原始音效与贴纸素材，仅保留在本机
 app/assets/audio/

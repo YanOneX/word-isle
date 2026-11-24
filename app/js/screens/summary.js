@@ -1,6 +1,6 @@
-// 一组学习结束后的总结页
+// 一组学习结束后的结算页（对齐原版 settle 布局）
 
-import { esc, fmtDuration, dayKey, todayWeek, WEEK_LABEL } from '../util.js';
+import { esc, fmtDuration, dayKey, todayWeek, WEEK_LABEL, coreMeaning } from '../util.js';
 import { icon, toast } from '../ui.js';
 import {
   state,
@@ -10,16 +10,25 @@ import {
   startSession,
   nextStudyWords,
   dueRecords,
+  dailyEntry,
+  recordOf,
+  toggleFavorite,
 } from '../store.js';
-import { getWordObj } from '../data.js';
+import { getWordObj, attachImage } from '../data.js';
 import { openWordDetail } from './detail.js';
-import { STICKERS, stickerImg } from './stickers.js';
 
-let expandAll = false;
+function meaning2(w) {
+  return coreMeaning(w.t || '')
+    .split(/[；;，,]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('；');
+}
 
 function weekDots() {
   const punched = new Set(state.data.streak.days || []);
-  return `<div class="summary-week">${todayWeek()
+  return `<div class="settle-week">${todayWeek()
     .map((d, i) => {
       const k = dayKey(d);
       return `<span class="${punched.has(k) ? 'on' : ''}"><b>${WEEK_LABEL[i]}</b><i></i></span>`;
@@ -64,59 +73,77 @@ export function renderSummary(root, params, ctx) {
   }
   const sum = session.summary;
   const words = (sum.words || []).map((k) => ({ key: k, w: getWordObj(k), res: session.results[k] || {} }));
-  const visible = expandAll ? words : words.slice(0, 3);
-  const stickers = (sum.stickers || []).map((id) => STICKERS.find((s) => s.id === id)).filter(Boolean);
-  const label = session.kind === 'review' ? '复习' : `第 ${(session.chapter || 0) + 1} 关`;
+  const label = session.kind === 'review' ? '复习' : `第${(session.chapter || 0) + 1}组`;
 
-  root.innerHTML = `<div class="summary-screen">
-    <div class="summary-head">
-      <span class="pill">${icon('check')} ${label} · 完成</span>
-      <button class="iconbtn" data-done>${icon('x')}</button>
+  const d = dailyEntry();
+  const learnedToday = (d.newW || 0) + (d.revW || 0);
+  const goal = Math.max(1, settings().dailyGroups * settings().batchSize);
+  const left = Math.max(0, goal - learnedToday);
+  const title = left > 0 ? 'Almost there' : '今日计划完成啦';
+  const sub = left > 0
+    ? `还差 ${left} 个完成今日计划 · 本轮用时 ${fmtDuration(sum.seconds)}`
+    : `今日计划已完成 · 本轮用时 ${fmtDuration(sum.seconds)}`;
+
+  root.innerHTML = `<div class="settle">
+    <div class="settle-head">
+      <button class="settle-back" data-done title="返回">${icon('chevL')}</button>
+      <span class="settle-pill">${label}${icon('check', 'ok')}</span>
+      <span class="settle-spacer"></span>
     </div>
-    <div class="summary-inner">
-      <img class="summary-mascot" src="./assets/art/settle.svg" alt="完成" />
-      <div class="summary-title">${sum.accuracy >= 90 ? '稳稳拿下' : sum.accuracy >= 60 ? '又前进了一步' : '记住它们就好'}</div>
-      <div class="summary-sub">本组 ${sum.total || words.length} 个单词 · 用时 ${fmtDuration(sum.seconds)}${sum.maxCombo ? ` · 最高 ${sum.maxCombo} 连击` : ''}</div>
-      <div class="summary-card">
-        <div class="summary-stats">
-          <div><div class="sn">${sum.newW || 0}<small> 词</small></div><div class="sl">本组新词</div></div>
-          <div><div class="sn">${sum.accuracy || 0}<small>%</small></div><div class="sl">首次答对率</div></div>
+    <div class="settle-scroll">
+      <img class="settle-mascot" src="./assets/art/settle.svg" alt="完成" />
+      <h1 class="settle-title">${title}</h1>
+      <p class="settle-sub">${sub}</p>
+
+      <div class="settle-card settle-stats-card">
+        <div class="settle-stats">
+          <div><div class="sv">${learnedToday}<small>/${goal}</small></div><div class="sl">已学单词</div></div>
+          <div><div class="sv">${sum.accuracy || 0}<small>%</small></div><div class="sl">正确率</div></div>
         </div>
         ${weekDots()}
       </div>
-      <div class="rank-bar">
-        <span class="left"><i></i><span>首次答对 ${sum.correct || 0}/${sum.total || words.length} 个 · 复习词 ${sum.revW || 0} 个</span></span>
-        <span class="link" data-stats>查看统计</span>
+
+      <div class="settle-card settle-sticker-card">
+        <div class="settle-sec-head"><span>点亮 ${words.length} 枚新贴纸</span><span class="settle-link" data-dex>图鉴 ${icon('chevR')}</span></div>
+        <div class="settle-tiles">
+          ${words
+            .map(
+              (x) => `<div class="settle-tile" data-word="${esc(x.key)}">
+                <div class="sti"><img alt="${esc(x.w.w)}" /></div>
+                <div class="stn">${esc(x.w.w)}</div>
+              </div>`,
+            )
+            .join('')}
+        </div>
       </div>
-      <div class="sticker-card">
-        <div class="sc-head"><span>本组贴纸</span><span class="link" data-dex>查看图鉴 ${icon('chevR')}</span></div>
-        ${
-          stickers.length
-            ? `<div class="sticker-row">${stickers
-                .map(
-                  (s) => `<div class="sticker-tile"><div class="st-img">${stickerImg(s)}</div><div class="st-name">${esc(s.name)}</div></div>`,
-                )
-                .join('')}</div>`
-            : `<div class="muted" style="font-size:11px;margin-top:12px">这组没有新的贴纸，继续学习还有机会</div>`
-        }
+
+      <div class="settle-review-head">
+        <span>再看一眼</span>
+        <button class="settle-add" data-addall><i></i>全部加入生词本</button>
       </div>
-      <div class="review-list">
-        <div class="rl-head"><span>再看一眼</span><button class="btn soft" data-expand>${expandAll ? '收起' : '展开全部'}</button></div>
-        ${visible
+      <div class="settle-words">
+        ${words
           .map(
-            (x) => `<div class="review-item" data-word="${esc(x.key)}">
-              <div><b>${esc(x.w.w)}</b> <span class="ri-mean">${esc((x.w.t || '').slice(0, 30))}</span></div>
-              <span class="ri-mark ${x.res.quizFirstTry === false ? '' : 'on'}"></span>
+            (x) => `<div class="settle-word" data-word="${esc(x.key)}">
+              <b>${esc(x.w.w)}</b>
+              <span class="sw-mean">${esc(meaning2(x.w))}</span>
+              <span class="sw-dot"></span>
             </div>`,
           )
           .join('')}
       </div>
-      <div class="summary-actions">
-        <button class="btn soft" data-again>再来一组</button>
-        <button class="btn primary" data-done>完成</button>
-      </div>
+    </div>
+
+    <div class="settle-actions">
+      <button class="settle-btn ghost" data-again>再来一组</button>
+      <button class="settle-btn primary" data-done>完成</button>
     </div>
   </div>`;
+
+  root.querySelectorAll('.settle-tile img').forEach((img, i) => {
+    const w = words[i] && words[i].w;
+    if (w) attachImage(img, w);
+  });
 
   root.querySelectorAll('[data-done]').forEach((b) =>
     b.addEventListener('click', () => {
@@ -125,16 +152,20 @@ export function renderSummary(root, params, ctx) {
     }),
   );
   root.querySelector('[data-again]').addEventListener('click', () => startNext(ctx));
-  root.querySelector('[data-stats]').addEventListener('click', () => {
-    endSession();
-    ctx.go('stats');
-  });
   root.querySelector('[data-dex]').addEventListener('click', () => ctx.go('stickers', { from: 'summary' }));
-  root.querySelector('[data-expand]').addEventListener('click', () => {
-    expandAll = !expandAll;
-    ctx.refresh();
+  root.querySelector('[data-addall]').addEventListener('click', () => {
+    let n = 0;
+    for (const x of words) {
+      if (!x.w || !x.w.w) continue;
+      const rec = recordOf(x.w.w);
+      if (!rec || !rec.isFavorite) {
+        toggleFavorite(x.w.w);
+        n++;
+      }
+    }
+    toast(n ? `已把 ${n} 个单词加入生词本` : '本组单词已经都在生词本里了');
   });
-  root.querySelectorAll('[data-word]').forEach((el) =>
-    el.addEventListener('click', () => openWordDetail(el.dataset.word)),
-  );
+  root.querySelectorAll('[data-word]').forEach((el) => {
+    el.addEventListener('click', () => openWordDetail(el.dataset.word));
+  });
 }
